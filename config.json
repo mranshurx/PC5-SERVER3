@@ -4,20 +4,12 @@
   },
   "dns": {
     "servers": [
-      "1.1.1.1",
-      "8.8.8.8",
-      {
-        "address": "1.1.1.1",
-        "domains": [
-          "domain:freefiremobile.com",
-          "domain:garena.com",
-          "domain:garena.in",
-          "domain:ff.garena.com",
-          "domain:asiarezzx.toulouse-digital31.fr"
-        ]
-      }
+      "https://1.1.1.1/dns-query",
+      "https://8.8.8.8/dns-query",
+      "localhost"
     ],
-    "queryStrategy": "UseIPv4"
+    "queryStrategy": "UseIPv4",
+    "tag": "dns-out"
   },
   "inbounds": [
     {
@@ -76,8 +68,12 @@
     {
       "tag": "direct",
       "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIPv4"
+      "settings": {},
+      "streamSettings": {
+        "sockopt": {
+          "domainStrategy": "UseIPv4",
+          "tcpNoDelay": true
+        }
       }
     },
     {
@@ -93,6 +89,20 @@
   "routing": {
     "domainStrategy": "IPOnDemand",
     "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "dns-out"
+        ],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "domain": [
+          "domain:asiarezzx.toulouse-digital31.fr"
+        ],
+        "outboundTag": "direct"
+      },
       {
         "type": "field",
         "ip": [
